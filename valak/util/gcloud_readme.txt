@@ -42,7 +42,12 @@ the files stored there have a persistent storage
  
 >gcloud alpha cloud-shell ssh  #connect by ssh to your gcp console
 
+#copy files by scp 
+> gcloud alpha  cloud-shell scp --help
+> gcloud alpha  cloud-shell scp localhost:/Users/zimine/t.sql   localhost:/Users/zimine/t.Rmd  cloudshell:~
+
 
 #copy local files to a bucket 
 >gsutil  cp ./cloudsql/* gs://qwiklabs-gcp-29bd7ee5dc1fbbb6/sql/
 
+#
