@@ -11,4 +11,5 @@ https://cloud.google.com/sdk/install
 #copy local files to a bucket 
 >gsutil  cp ./cloudsql/* gs://qwiklabs-gcp-29bd7ee5dc1fbbb6/sql/
 
+#
 
