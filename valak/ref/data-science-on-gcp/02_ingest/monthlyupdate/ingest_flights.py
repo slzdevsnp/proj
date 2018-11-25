@@ -176,7 +176,7 @@ if __name__ == '__main__':
          year = args.year
          month = args.month
       logging.debug('Ingesting year={} month={}'.format(year, month))
-      gcsfile = ingest(year, month, args.bucket)
+      gcsfile = ingest(year, month, args.bucket)  ## call a top processing function
       logging.info('Success ... ingested to {}'.format(gcsfile))
    except DataUnavailable as e:
       logging.info('Try again later: {}'.format(e.message))
