@@ -108,8 +108,16 @@ It is a very useful code to download from the web datasets
 =   ch3_sqlstudio
 ==========================
 
-in wk/
+in wk/03_sqlstudio/create_instance.ch
+change gce-zone to europe-west1-b
 
+run to provision a sql instnace
+cd 03_sqlstudio
+./create_instance.ch
+
+go to google console mysql to set root password on flights instance 
+
+./authorize_cloudshell.sh  # to allow to connect to sql from gcp console
 
 
 
