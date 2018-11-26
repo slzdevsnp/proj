@@ -118,7 +118,12 @@ cd 03_sqlstudio
 go to google console mysql to set root password on flights instance 
 
 ./authorize_cloudshell.sh  # to allow to connect to sql from gcp console
+  it calls 
+$ gcloud sql instances patch flights \
+    --authorized-networks `wget -qO - http://ipecho.net/plain`/32
 
+./create_table.sh  #it puts the mysql ip into $MYSQLIP and calls mysql < create_table.sql which contains bts db create + flights table def
 
+./populate_table.sh valak # to put 3 months of csv data into the bts.flights table
 
-
+./contingency.sh   # to print a contingency 2x2 table on arr_delay and dep_delay
