@@ -126,4 +126,25 @@ $ gcloud sql instances patch flights \
 
 ./populate_table.sh valak # to put 3 months of csv data into the bts.flights table
 
+NB! if you have 401 serivice exception run source valak/util/szi_acc_credentials.sh
+
+
 ./contingency.sh   # to print a contingency 2x2 table on arr_delay and dep_delay
+
+#creating dashboard
+go to datastudio.google.com
+->datasources -> select cloud sql
+type: basic 
+in instance name select instance connection name from UI instance details of your sql instance
+valak01227408:europe-west2:fflights
+
+select table flighs, click on create report 
+
+after the first page is created in datastudio
+./create_views.sh
+It creates 3 views which will be connected as datasources to data studio report
+delayed_10
+delayed_15
+delayed_20
+
+
