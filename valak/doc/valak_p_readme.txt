@@ -147,4 +147,9 @@ delayed_10
 delayed_15
 delayed_20
 
+in datstudio create separate datasources for each view
+in Valak Flights report Settings -> Select Data Source
+   add these 3 datasources
+
+
 
