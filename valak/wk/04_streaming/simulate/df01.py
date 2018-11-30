@@ -26,6 +26,9 @@ if __name__ == '__main__':
          | beam.Map(lambda fields: (fields[0], (fields[21], fields[26])))    #airport_id, latitude, longitude
       )
 
-      airports | beam.Map(lambda (airport, data): '{},{}'.format(airport, ','.join(data)) )| beam.io.textio.WriteToText('extracted_airports')
+      airports | beam.Map(lambda (airport, data):
+                          '{},{}'.format(airport, ','.join(data)) )\
+               | beam.io.textio.WriteToText('extracted_airports')
+
 
       pipeline.run()
