@@ -200,5 +200,28 @@ from  https://github.com/GoogleCloudPlatform/data-science-on-gcp/blob/master/04_
 download airports.csv.gz and copy it to 04/streaming/simulate
 
 ./df01.py   # extracts airport id, latitude and longitude fields and saves it to 
+!NB df01.py is runnable on osx pycharm  if project python interpreter is set to 2.7
 
+./df02.py   #adds timezone to airports (execution takes some time, tail -f on file inside beam-temp-airports.. )
+#creates airports_with_tz
+
+ ./df03.py  # joins 1K sample of flights data 201501_part.csv   with airports.csv.gz to convert dates to csv
+ head -3 all_flights-00000*
+
+./df04.py  # same as df03.py but also correct a 24 hour potential offset 
+$ cat all_flights-00000-of-00001
+
+./df05.py  # add processing of simulated events 
+
+## finally to run the dates conversion job in dataFlow on gcp
+
+# bq mk flights #create a flights dataset in BigQuery
+
+#check setup.py file  (contains python packages that need to be deployed to dataflow nodes)
+
+do
+sudo pip install google-cloud-dataflow
+#to start the job on dataflow
+./df06.py -p valak01227408 -b valak -d flights   
+#make sure that dataflow api is enabled for the project_id valak01227408  on google apis gui page
 
