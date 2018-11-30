@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 
 # Copyright 2016 Google Inc.
 #
@@ -80,34 +80,37 @@ def tz_correct(line, airport_timezones):
 def get_next_event(fields):
     if len(fields[14]) > 0:
        event = list(fields) # copy
-       event.extend(['departed', fields[14]])
+       event.extend(['departed', fields[14]]) #add 2 elements to list
        for f in [16,17,18,19,21,22,25]:
           event[f] = ''  # not knowable at departure time
        yield event
     if len(fields[21]) > 0:
        event = list(fields)
-       event.extend(['arrived', fields[21]])
+       event.extend(['arrived', fields[21]])  # add 2 elements to list
        yield event
 
 def run():
    with beam.Pipeline('DirectRunner') as pipeline:
 
+      #pipe1
       airports = (pipeline
          | 'airports:read' >> beam.io.ReadFromText('airports.csv.gz')
          | 'airports:fields' >> beam.Map(lambda line: next(csv.reader([line])))
          | 'airports:tz' >> beam.Map(lambda fields: (fields[0], addtimezone(fields[21], fields[26])))
       )
-
+      #pipe2  is merged with pip1
       flights = (pipeline
          | 'flights:read' >> beam.io.ReadFromText('201501_part.csv')
          | 'flights:tzcorr' >> beam.FlatMap(tz_correct, beam.pvalue.AsDict(airports))
       )
 
+      #pip2
       (flights
          | 'flights:tostring' >> beam.Map(lambda fields: ','.join(fields))
          | 'flights:out' >> beam.io.textio.WriteToText('all_flights')
       )
 
+      #pipe3
       events = flights | beam.FlatMap(get_next_event)
 
       (events

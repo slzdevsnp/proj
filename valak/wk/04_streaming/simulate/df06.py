@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 
 # Copyright 2016 Google Inc.
 #
@@ -119,8 +119,9 @@ def run(project, bucket, dataset):
       '--setup_file=./setup.py',
       '--max_num_workers=8',
       '--autoscaling_algorithm=THROUGHPUT_BASED',
-      '--runner=DataflowRunner'
+      '--runner=DataflowRunner'   ## running on dataflow vs direct Runner
    ]
+   #intput outputs
    airports_filename = 'gs://{}/flights/airports/airports.csv.gz'.format(bucket)
    flights_raw_files = 'gs://{}/flights/raw/*.csv'.format(bucket)
    flights_output = 'gs://{}/flights/tzcorr/all_flights'.format(bucket)
@@ -145,7 +146,7 @@ def run(project, bucket, dataset):
    )
 
    events = flights | beam.FlatMap(get_next_event)
-
+   #big query schema
    schema = 'FL_DATE:date,UNIQUE_CARRIER:string,AIRLINE_ID:string,CARRIER:string,FL_NUM:string,ORIGIN_AIRPORT_ID:string,ORIGIN_AIRPORT_SEQ_ID:integer,ORIGIN_CITY_MARKET_ID:string,ORIGIN:string,DEST_AIRPORT_ID:string,DEST_AIRPORT_SEQ_ID:integer,DEST_CITY_MARKET_ID:string,DEST:string,CRS_DEP_TIME:timestamp,DEP_TIME:timestamp,DEP_DELAY:float,TAXI_OUT:float,WHEELS_OFF:timestamp,WHEELS_ON:timestamp,TAXI_IN:float,CRS_ARR_TIME:timestamp,ARR_TIME:timestamp,ARR_DELAY:float,CANCELLED:string,CANCELLATION_CODE:string,DIVERTED:string,DISTANCE:float,DEP_AIRPORT_LAT:float,DEP_AIRPORT_LON:float,DEP_AIRPORT_TZOFFSET:float,ARR_AIRPORT_LAT:float,ARR_AIRPORT_LON:float,ARR_AIRPORT_TZOFFSET:float,EVENT:string,NOTIFY_TIME:timestamp,EVENT_DATA:string'
 
    (events 
