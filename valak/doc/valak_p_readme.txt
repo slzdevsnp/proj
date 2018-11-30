@@ -149,7 +149,56 @@ delayed_20
 
 in datstudio create separate datasources for each view
 in Valak Flights report Settings -> Select Data Source
-   add these 3 datasources
+  es
+  add these 3 datasources
 
+
+==========================
+=   ch3_streaming
+==========================
+
+map of global timezones
+https://commons.wikimedia.org/wiki/File:Standard_Time_Zones_of_the_World_(October_2015).svg
+
+Cloud DataFlow is built on 
+FLume pub page
+https://ai.google/research/pubs/pub35650
+
+MillWheel pub page
+https://ai.google/research/pubs/pub41378
+
+batch job code is writtent in java or python in 
+https://beam.apache.org
+can be executed on multiple execution envs  Apache Flin (udemy,pluralsight) Apache Spark (pluralsight)
+
+on gcp dataflow is a serverless execution environment,
+executing beam pipelines
+
+## airports data download manually
+https://www.transtats.bts.gov/DL_SelectFields.asp?Table_ID=288
+
+
+
+
+
+
+
+$ cd 04_streamain
+$ ./ingest_from_crsbucket.sh BUCKET_NAME
+## copies files in tzcorr and  airports 
+
+$ cd 04_streaming/simulate
+$ ./install_packages.sh  ## on osx  ./install_packages_osx.sh  into /usr/local  installation of python OK, OK
+
+In original dataset FL_DATE is YY-MM-DD DEP_TIME is HHMM  !NB but no info on timezone offset
+time zone offsets can be determined based on ORIGIN_AIRPORT_ID  and DEST_AIRPORT_ID
+ 
+original url for airport data bts
+https://www.transtats.bts.gov/DL_SelectFields.asp?Table_ID=288
+
+from  https://github.com/GoogleCloudPlatform/data-science-on-gcp/blob/master/04_streaming/simulate/airports.csv.gz
+download airports.csv.gz and copy it to 04/streaming/simulate
+
+./df01.py   # extracts airport id, latitude and longitude fields and saves it to 
 
 
