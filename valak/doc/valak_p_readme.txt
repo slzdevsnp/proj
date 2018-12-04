@@ -225,3 +225,90 @@ sudo pip install google-cloud-dataflow
 ./df06.py -p valak01227408 -b valak -d flights   
 #make sure that dataflow api is enabled for the project_id valak01227408  on google apis gui page
 
+CODE: df06.py  apache beam in python how to save stream in Big Query
+
+run the bquery
+
+ 		SELECT
+ 		  ORIGIN,
+ 		  DEP_TIME,
+ 		  DEP_DELAY,
+ 		  DEST,
+ 		  ARR_TIME,
+ 		  ARR_DELAY,
+ 		  NOTIFY_TIME
+ 		FROM
+ 		  flights.simevents
+ 		WHERE
+ 		  (DEP_DELAY > 15 and ORIGIN = 'SEA') or
+ 		  (ARR_DELAY > 15 and DEST = 'SEA')
+ 		ORDER BY NOTIFY_TIME ASC
+ 		LIMIT
+ 		  100
+
+
+#####  simulating streaming ########
+
+
+$ gcloud auth application-default login    #this asks to go to a url in the browser and stores a tmp applicatgion_default_credentials.json 
+##  To generate an access token for other uses, run: gcloud auth application-default print-access-token
+env
+
+CODE: simpulate.py  python program  how to read a table from BigQuery and send events to pubSub
+
+#to start simulation of publishing events: 
+ $ python ./simulate.py --startTime '2015-05-01 00:00:00 UTC' --endTime '2015-05-04 00:00:00 UTC' --speedFactor=30 --project $DEVSHELL_PROJECT_ID
+
+#in another shell start cloud data flow job which consumes events from pub/sub  and  writes them in BigQuery
+cd ../realtime
+./run_cloud.shn valak
+goto GUI dataflow to monitor the job
+
+to cancel the job using the 'gcloud' tool, run:
+> gcloud dataflow jobs --project=valak01227408 cancel --region=us-central1 2018-12-04_04_47_09-11589368022683513799
+
+CODE: NB: <~> java 8 notationj ? 
+CODE: do some basic examples of apache beam sdk doc
+CODE: book amzn: Streaming Systems :: streaming data in RealTime
+
+
+## bq query for agg stats of an airport
+select
+* 
+from `flights.streaming_delays`
+where airport = 'SEA'
+order by timestamp desc
+
+##  save this query as a view  
+ 	SELECT
+ 	  airport,
+ 	  last[safe_OFFSET(0)].*,
+ 	  CONCAT(CAST(last[safe_OFFSET(0)].latitude AS STRING), ",", CAST(last[safe_OFFSET(0)].longitude AS STRING)) AS location
+ 	FROM (
+ 	  SELECT
+ 	    airport,
+ 	    ARRAY_AGG(STRUCT(arr_delay,
+ 	        dep_delay,
+ 	        timestamp,
+ 	        latitude,
+ 	        longitude,
+ 	        num_flights)
+ 	    ORDER BY
+ 	      timestamp DESC
+ 	    LIMIT
+ 	      1) last
+ 	  FROM
+ 	    `flights.streaming_delays`
+ 	  GROUP BY
+ 	    airport )
+
+## create a view on cmd using the query below in 1 line
+$ bq mk --use_legacy_sql=false --expiration 3600 --description "This is m
+y view" --label organization:development --view "SELECT airport, last[safe_OFFSET(0)].*, CONCAT(CAST(last[safe_OFFSET(0)].latitude AS STRING), '
+,', CAST(last[safe_OFFSET(0)].longitude AS STRING)) AS location FROM (SELECT airport, ARRAY_AGG(STRUCT(arr_delay, dep_delay, timestamp, latitude
+, longitude, num_flights) ORDER BY timestamp DESC LIMIT 1) last FROM \`valak01227408:flights.streaming_delays\` GROUP BY airport )" --project_id
+  valak01227408 valak01227408:flights.vdelay
+  
+#next you create a datastudio datasource based on vdelay view
+
+
