@@ -124,7 +124,7 @@ public class AverageDelayPipeline {
 						c.output(new AirportStats(airport, arrDelay, depDelay, timestamp, num_flights));
 					}
 
-				}))//
+				}))//   szi  writing to bquery preparing a row of data
 				.apply("airport:to_BQrow", ParDo.of(new DoFn<AirportStats, TableRow>() {
 					@ProcessElement
 					public void processElement(ProcessContext c) throws Exception {
@@ -141,7 +141,7 @@ public class AverageDelayPipeline {
 						row.set("num_flights", stats.num_flights);
 						c.output(row);
 					}
-				}))//
+				}))// szi appending to bq table
 				.apply("airport:write_toBQ",
 						BigQueryIO.writeTableRows().to(outputTable) //
 								.withSchema(schema)//
@@ -167,7 +167,7 @@ public class AverageDelayPipeline {
 		System.out.println("Averaging interval = " + averagingInterval);
 		System.out.println("Averaging freq = " + averagingFrequency);
 		
-		String topic = "projects/" + options.getProject() + "/topics/" + event;
+		String topic = "projects/" + options.getProject() + "/topics/" + event;  // event topic is linked to myproject
 		final FieldNumberLookup eventType = FieldNumberLookup.create(event);
 		PCollection<Flight> flights = p //
 				.apply(event + ":read", //

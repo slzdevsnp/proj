@@ -43,7 +43,7 @@ def notify(publisher, topics, rows, simStartTime, programStart, speedFactor):
         to_sleep_secs = sim_time_elapsed - time_elapsed
         return to_sleep_secs
 
-   tonotify = {}
+   tonotify = {}  # a dict
    for key in topics:
      tonotify[key] = list()
 
@@ -91,7 +91,7 @@ if __name__ == '__main__':
       jitter = '0'
 
  
-   # run the query to pull simulated events
+   # run the query to pull simulated events (3 params)
    querystr = """\
 SELECT
   EVENT,
@@ -117,10 +117,10 @@ ORDER BY
        try:
           publisher.get_topic(topics[event_type])
        except:
-          publisher.create_topic(topics[event_type])
+          publisher.create_topic(topics[event_type]) #if this topic not yet exists
    
    # notify about each row in the dataset
    programStartTime = datetime.datetime.utcnow() 
    simStartTime = datetime.datetime.strptime(args.startTime, TIME_FORMAT).replace(tzinfo=pytz.UTC)
    print 'Simulation start time is {}'.format(simStartTime)
-   notify(publisher, topics, rows, simStartTime, programStartTime, args.speedFactor)
+   notify(publisher, topics, rows, simStartTime, programStartTime, args.speedFactor) ## this code is more modern than a version in the book

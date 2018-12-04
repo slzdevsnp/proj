@@ -25,7 +25,7 @@ public class FieldNumberLookup implements Serializable {
 
 	public static FieldNumberLookup create(String event) {
 		if (event.equals("arrived")) {
-			// from table in Ch 2
+			// from table in Ch 2  (fields in eventdata field in flights.simevents)
 			return new FieldNumberLookup(event, 13, 31, 32, 23, 22);
 		} else {
 			return new FieldNumberLookup(event, 9, 28, 29, 16, 15);
