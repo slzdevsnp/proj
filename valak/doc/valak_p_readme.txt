@@ -1,9 +1,37 @@
 valak  book  tasks
 
-github repo
+plan:
+19.05.12 do chap 7, chap 8
+19.05.11 do chap 5, chap 6
+19.05.11  review chap 4 (later)
+
+
+
+chap2
+     ingest data into cloud from web scrappig
+     periodic monthly update
+
+chap3
+     basic data visualization in the sql studio
+chap4 
+    streaming simulation with pubsub
+chap5 
+    interactive data exploratino with datalab 
+    instances
+chap6 
+
+chap7
+
+chap8
+
+chap9
+
+chap10
+
+
 
 ==========================
-=   ch2_ingestion
+   ch2_ingestion
 ==========================
 
 bts url
@@ -154,7 +182,7 @@ in Valak Flights report Settings -> Select Data Source
 
 
 ==========================
-=   ch3_streaming
+=   ch4_streaming
 ==========================
 
 map of global timezones
@@ -310,5 +338,62 @@ y view" --label organization:development --view "SELECT airport, last[safe_OFFSE
   valak01227408 valak01227408:flights.vdelay
   
 #next you create a datastudio datasource based on vdelay view
+
+==========================
+=   ch5_bqdatalab
+==========================
+. set crededentials from proj/utils folder
+## this step copies data and creates tzcorr table in flights dataset
+./load_into_bq.sh valak    
+
+!NB valack bucket shoudl exist from previous chapters 
+
+
+#test it with the query below 
+
+NB! tzcorr is a table with corrected utc timestamps on departures and arrivales 
+# this query shows average depart delay, arrival delay  with number of flights
+# for each of 143 airports with a minimum threshold of 3650 flights
+SELECT
+   *
+ FROM (
+   SELECT
+     ORIGIN,
+     AVG(DEP_DELAY) AS dep_delay,
+     AVG(ARR_DELAY) AS arr_delay,
+     COUNT(ARR_DELAY) AS num_flights
+   FROM
+     flights.tzcorr
+   GROUP BY
+     ORIGIN )
+ WHERE
+   num_flights > 3650
+ ORDER BY
+   dep_delay DESC
+ 
+ 
+##save the query below in the table trainday
+or run the script 
+mk_tbl_trainday.sh
+
+   #standardsql
+ SELECT
+   FL_DATE,
+   IF(MOD(ABS(FARM_FINGERPRINT(CAST(FL_DATE AS STRING))), 100) < 70, 'True', 'False') AS is_train_day
+ FROM (
+   SELECT
+     DISTINCT(FL_DATE) AS FL_DATE
+   FROM
+     `flights.tzcorr`)
+ ORDER BY
+   FL_DATE
+   
+In CloudShell, create a Datalab instance (change the zone to match where zone of valak):
+datalab create --zone us-west2-a dsongcp  #
+#this creates a vm instance (takes a few minutes)
+
+#Once you get the message that the instance is reachable on localhost:8081, navigate
+to the web page using the Web Preview button on the top-right of Cloud Shell.
+
 
 
