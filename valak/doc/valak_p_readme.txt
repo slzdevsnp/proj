@@ -1,3 +1,5 @@
+the book is on paper, in iBooks, pdf
+
 valak  book  tasks
 
 plan:
@@ -17,8 +19,13 @@ chap4
     streaming simulation with pubsub
 chap5 
     interactive data exploratino with datalab 
-    instances
+    instances. lrn how to create a datalab vm, how to use magic tags with bq 
+    how to perform exploratory analysis with bq, quickly plot pandas Data frames
+    APPROX_QUANTILES, FARM_FINGERPRINT funcs
 chap6 
+    dataproc  (spark)
+   
+
 
 chap7
 
@@ -395,5 +402,29 @@ datalab create --zone us-west2-a dsongcp  #
 #Once you get the message that the instance is reachable on localhost:8081, navigate
 to the web page using the Web Preview button on the top-right of Cloud Shell.
 
+on the list of vms page, connect by ssh to datalb vm 
+git clone the proj repo
+~/proj/valak/wk/05_bqdatalab/notebooks $ sudo cp *.ipynb /mnt/disks/datalab-pd/content/datalab/notebooks/
+go through the notebooks cells 
 
+in the middle of notebok,  run quries in bq UI  from file queries_in_bq_ui.sql
 
+Once you have worked through all cells, 
+copy the notebook back to  repo location and do the git commit 
+cp  /mnt/disks/datalab-pd/content/datalab/notebooks/exploration_szi.ipynb  ~/
+proj/valak/wk/05_bqdatalab/notebooks/
+
+now delete the datalab instance
+when you delete the datalab vm insance, also  check that you delete its disk
+
+if yo do it with a script rm_debian_vm.sh   the disk will be deleted. 
+
+==========================
+=   ch6_dataproc
+==========================
+
+    cp from ref create_cluster.sh and run it to create a cluster with 2 workers
+    the 3 machines are all created with 500 GB disks. 
+
+ create_cluster.sh valak us-west2-a     #takes up to 5 mins
+ 
