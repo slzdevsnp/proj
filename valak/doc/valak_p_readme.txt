@@ -439,3 +439,75 @@ this opens a new chrome browser.  goto  http://ch6cluster-m:8080   to open a dat
 on cluster master vm 
 create a new notebooke quantization_szi.ipynb
 rework cells of the quantization.ipynb ref 
+
+increase the size of the cluster
+increase_cluster.sh
+
+run the notebook quantization_fulldata_szi.ipybnb
+( line changed to read all csv fields
+inputs = 'gs://{}/flights/tzcorr/all_flights-*'.format(BUCKET)
+)
+=Bayes Classification using Pig 
+modify bayes.pig   to correct the bucket to brd_valak
+run the pig job 
+gcloud dataproc jobs submit pig --cluster ch6cluster --file bayes.pig
+(job on 1 file took 1 min)
+to see the output 
+gsutil ls gs://brd_valak/flights/pigoutput
+gsutil cat gs://brd_valak/flights/pigoutput/part-*
+
+this file shows pairs, delays+ distance 
+
+#to run the final pig job
+delete the pigout folder
+gsutil -m rm -r  gs://brd_valak/flights/pigoutput/
+replace the bucket name to yours 
+sed 's/cloud-training-demos-ml/brd_valak/g' bayes_final.pig > bayes_final_szi.pig
+
+gcloud dataproc jobs submit pig --cluster ch6cluster --file bayes_final_szi.pig
+gsutil cat gs://brd_valak/flights/pigoutput/part-*
+
+22:15 - 22:17 the  job took 2 mins on cluster with 4 workers + 3 preemptive workers
+
+this file shows pairs on decision boundry
+
+368,15
+575,17
+838,18
+1218,18
+9999,19
+
+delete the cluster 
+./delete_cluster.sh 
+
+(unfortunately the existing ipynb files quantization_szi* must be reviewed
+to make them run )
+## model quality verification using the results from pig 
+
+#run in BQ ui 
+##sum of all cancels
+SELECT
+  SUM(IF(DEP_DELAY >= 15 AND DISTANCE < 368, 1, 0)) +
+  SUM(IF(DEP_DELAY >= 17 AND DISTANCE >= 368 AND DISTANCE < 575, 1, 0)) +
+  SUM(IF(DEP_DELAY >= 18 AND DISTANCE >= 575 AND DISTANCE < 838, 1, 0)) +
+  SUM(IF(DEP_DELAY >= 18 AND DISTANCE >= 838 AND DISTANCE < 1218, 1, 0)) +
+  SUM(IF(DEP_DELAY >= 19 AND DISTANCE >= 1218, 1, 0))
+  AS cancel
+FROM (
+  SELECT
+    DEP_DELAY,
+    ARR_DELAY,
+    DISTANCE
+  FROM
+    flights.tzcorr f
+  JOIN
+    flights.trainday t
+  ON
+    f.FL_DATE = t.FL_DATE
+  WHERE
+    t.is_train_day = 'False'
+
+
+
+
+
