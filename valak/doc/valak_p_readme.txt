@@ -427,4 +427,15 @@ if yo do it with a script rm_debian_vm.sh   the disk will be deleted.
     the 3 machines are all created with 500 GB disks. 
 
  create_cluster.sh valak us-west2-a     #takes up to 5 mins
- 
+
+ on your local machine OSX
+ change the account to zlava@gmail.com
+ change the project to valak01227408  
+ 1. create a tunnel   
+ > local_create_ssh_tunnel.sh  #make sure the zone matches
+ 2. run a chrome session to the localhost:1080
+> local_run_chrome_tunnel_1080.sh 
+this opens a new chrome browser.  goto  http://ch6cluster-m:8080   to open a datalab UI
+on cluster master vm 
+create a new notebooke quantization_szi.ipynb
+rework cells of the quantization.ipynb ref 
