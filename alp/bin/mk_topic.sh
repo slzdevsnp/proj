@@ -2,7 +2,7 @@
 
 # kafka-topics.sh --bootstrap-server localhost:9092 --list
 # kafka-topics.sh --bootstrap-server localhost:9092 --topic user_frames  --describe
-
+# kafka-user-hits zimine$ kafka-topics.sh --bootstrap-server localhost:9092 --topic user_frames_p --delete
 broker_host=localhost:9092
 topic_name=user_frames_p
 npartitions=3

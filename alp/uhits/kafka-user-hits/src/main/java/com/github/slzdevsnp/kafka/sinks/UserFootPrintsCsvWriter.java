@@ -1,5 +1,6 @@
-package com.github.slzdevsnp.kafka.consumers;
+package com.github.slzdevsnp.kafka.sinks;
 
+import com.github.slzdevsnp.kafka.consumers.ConsumerCsvWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +37,7 @@ public class UserFootPrintsCsvWriter {
         String fmtCsvLine(String uid, Long ts){
             return String.format("%s,%d",uid,ts)+"\r\n";
         }
-        void appendDataLine(String uid, Long ts){
+        public void appendDataLine(String uid, Long ts){
             try{
                 Files.write(Paths.get(this.filename),fmtCsvLine(uid,ts).getBytes(),StandardOpenOption.APPEND);
             }catch(IOException e){

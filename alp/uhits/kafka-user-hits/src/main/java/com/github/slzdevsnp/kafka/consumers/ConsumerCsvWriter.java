@@ -1,5 +1,6 @@
 package com.github.slzdevsnp.kafka.consumers;
 
+import com.github.slzdevsnp.kafka.sinks.UserFootPrintsCsvWriter;
 import com.google.gson.JsonParser;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -10,11 +11,6 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.time.*;
 import java.util.Arrays;
 import java.util.Properties;
@@ -32,7 +28,7 @@ public class ConsumerCsvWriter {
         properties.setProperty(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         properties.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, groupId);
-        properties.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest"); //earliest/latest/none
+        properties.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
         // create consumer
         KafkaConsumer<String, String> consumer = new KafkaConsumer<String, String>(properties);
@@ -70,16 +66,25 @@ public class ConsumerCsvWriter {
 
         final Logger logger = LoggerFactory.getLogger(ConsumerCsvWriter.class);
 
+
+        if (args.length != 3){
+            logger.info("expected posititonal command line params: "
+                    + "bootstrapServers  topic  groupId");
+            return;
+        }
+        String bootstrapServers = args[0];
+        String topic = args[1];
+        String groupId = args[2];
+
+        /*
         String bootstrapServers = "127.0.0.1:9092";
-
+        String topic = "user_frames_p"; //"user_frames"
         String groupId = "users_csv_app";
+        */
 
-        //String topic = "user_frames";
-        String topic = "user_frames_p";
 
         int EXIT_EMPTY_COUNTS=5;
 
-        //final String csvFile = "/tmp/stream_sample.csv";
         final String csvFile = "/tmp/stream_prd.csv";
         UserFootPrintsCsvWriter fwriter = new UserFootPrintsCsvWriter(csvFile);
 

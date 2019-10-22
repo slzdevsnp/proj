@@ -84,24 +84,33 @@ public class ConsumerMetricCounter {
 
         final Logger logger = LoggerFactory.getLogger(ConsumerMetricCounter.class);
 
+         if (args.length != 3){
+            logger.info("expected posititonal command line params: "
+                    + "bootstrapServers  topic  groupId");
+            return;
+        }
+        String bootstrapServers = args[0];
+        String topic = args[1];
+        String groupId = args[2];
+
+        /*
         String bootstrapServers = "127.0.0.1:9092";
-
+        String topic = "user_frames_p"; //"user_frames"
         String groupId = "users_metric_app";
+        */
 
-        //String topic = "user_frames";
-        String topic = "user_frames_p";
 
         int EXIT_EMPTY_COUNTS = 30;
 
         KafkaConsumer<String,String> consumer = mkConsumer(bootstrapServers,groupId,topic);
 
         //storage for the metric
-        Map<Long, Set<String>> mtr = new LinkedHashMap<Long,Set<String>>();
+        Map<Long, Set<String>> mtr = new HashMap<Long,Set<String>>();
 
 
         int emptyCounts = 0;
         int recCount = 0;
-        //poll data indefinitely untill no data is incoming for 3 seconds
+        //poll data indefinitely until no data is incomming during 200 ms * 30 times
         while(true){
             ConsumerRecords<String, String> records =
                     consumer.poll(Duration.ofMillis(200));
@@ -120,9 +129,6 @@ public class ConsumerMetricCounter {
 
                 recCount +=1;
                 if (recCount % 50000 == 0){
-                    /*logger.info("current record: uid: " + uid + " epoch: " + ts + " datetime: " + datetime );
-                    logger.info("With processed " + recCount + " records the average number of unique users "
-                    + computeAverage(mtr) + " per min  over " + mtr.size() + " minutes seen."); */
                     String msg = String.format("With processed %d records the average number of unique users: %.3f"
                               + " per min  over %d minutes seen.",recCount,computeAverage(mtr),mtr.size());
                     logger.info(msg);
