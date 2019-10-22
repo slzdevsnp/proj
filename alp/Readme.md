@@ -34,7 +34,7 @@ in the dictionary. As a set only allows to contain unique elements, we don't nee
 #### Birds view on the streamed data. 
 To get a bigger picture on the processed data and to have a comparison base on computed metric results, I wrote a second java consumer which sinks the uid and time stamps fields into a csv file. 
 
-The csv file is then loaded and processed for the same metric calculations and some visualizations in jupyter notebook in python and can be found in the **nb/explore_users.md**. The jupyter notebook **nb/explore_users.ipynb** can be run with a jupyter server running on python kernel with packages installed as outlined in the notebook. The csv consumer program can be ran with **bin/runJavaCsvSinkApp.sh**. If necessary run the bin/group_topic_reset_offset.sh script. 
+The csv file is then loaded and processed for the same metric calculations and some visualizations in jupyter notebook in python and can be found in the **nb/** sub-folder. The jupyter notebook **nb/explore_users.ipynb** can be ran with a jupyter server running on python kernel with packages installed as outlined in the notebook. The csv consumer program can be ran with **bin/runJavaCsvSinkApp.sh**. If required run the bin/group_topic_reset_offset.sh script. 
 
 Both in the Java program output and in the jupyter notebook we observe comparable averages. 
 
