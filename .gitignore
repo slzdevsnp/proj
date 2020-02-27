@@ -1,3 +1,6 @@
 #idea projects
 .idea/
 *.iml
+target/
+#osx
+.DS_Store
